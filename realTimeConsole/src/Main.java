@@ -1,15 +1,9 @@
 import utils.CPUUtilization;
 import utils.ClockPriorities;
-import utils.MockValues;
 
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.List;
 
-import static java.lang.Thread.currentThread;
 import static java.lang.Thread.sleep;
 
 public class Main {
@@ -22,7 +16,6 @@ public class Main {
      * max to make sure it will remain active and the starts the clocks
      */
     public static void main(String[] args) {
-        ClockPriorities.getPriorityOrder(0, true);
         String[] zoneIds = {"Asia/Tehran", "Europe/London", "Australia/Sydney", "America/Chicago"};
         Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
         runClocks(zoneIds);
