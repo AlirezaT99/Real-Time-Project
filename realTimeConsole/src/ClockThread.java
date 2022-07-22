@@ -5,7 +5,7 @@ import java.time.format.FormatStyle;
 
 public class ClockThread extends Thread {
 
-    private final String zoneId;
+    public final String zoneId;
     public String time = "";
 
     public ClockThread(String zoneId) {

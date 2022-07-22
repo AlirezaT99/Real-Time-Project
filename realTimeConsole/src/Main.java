@@ -41,8 +41,10 @@ public class Main {
                 for (int i = 0; i < 4; i++) {
                     if (priorityOrder.get(i) <= runningThreadsCount) {
                         threads[i].resume();
+//                        graphicThreads[i].resume();
                     } else {
                         threads[i].suspend();
+//                        graphicThreads[i].suspend();
                     }
                 }
             }
