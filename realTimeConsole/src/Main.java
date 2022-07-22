@@ -23,11 +23,12 @@ public class Main {
 
     private static void runClocks(String[] zoneIds) {
         now = Instant.now();
-        Thread[] threads = initializeThreads(zoneIds);
+        ClockThread[] threads = initializeThreads(zoneIds);
+        Thread[] graphicThreads = initializeGraphicThreads(threads);
         int second, runningThreadsCount;
         final int[] priorities = new int[]{8, 6, 4, 2};
         List<Integer> priorityOrder;
-        startThreads(threads);
+        startThreads(threads, graphicThreads);
         while (true) {
             now = Instant.now();
             second = (int) now.getEpochSecond() % 60;
@@ -54,17 +55,26 @@ public class Main {
 
     }
 
-    private static void startThreads(Thread[] threads) {
-        for (Thread thread : threads) {
-            thread.start();
+    private static void startThreads(ClockThread[] threads, Thread[] graphicThreads) {
+        for (int i = 0; i < threads.length; i++) {
+            threads[i].start();
+            graphicThreads[i].start();
         }
     }
 
-    private static Thread[] initializeThreads(String[] zoneIds) {
-        Thread[] threads = new ClockThread[zoneIds.length];
+    private static ClockThread[] initializeThreads(String[] zoneIds) {
+        ClockThread[] threads = new ClockThread[zoneIds.length];
         for (int i = 0; i < zoneIds.length; i++) {
             threads[i] = new ClockThread(zoneIds[i]);
         }
         return threads;
+    }
+
+    private static Thread[] initializeGraphicThreads(ClockThread[] threads) {
+        Thread[] graphicThreads = new Thread[threads.length];
+        for (int i = 0; i < threads.length; i++) {
+            graphicThreads[i] = new Thread(new DigitalWatch(threads[i]));
+        }
+        return graphicThreads;
     }
 }
