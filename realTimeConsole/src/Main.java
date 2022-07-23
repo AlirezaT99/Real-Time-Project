@@ -1,8 +1,6 @@
 import utils.CPUUtilization;
 import utils.ClockPriorities;
 
-import java.awt.*;
-import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 
@@ -41,7 +39,7 @@ public class Main {
             }
             if (DEBUG) {
                 for (int i = 0; i < 4; i++) {
-                    if (priorityOrder.get(i) <= runningThreadsCount) {
+                    if (priorityOrder.get(i) < runningThreadsCount) {
                         graphicThreads[i].resume();
                     } else {
                         graphicThreads[i].suspend();
