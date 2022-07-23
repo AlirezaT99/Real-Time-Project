@@ -2,6 +2,7 @@ import utils.CPUUtilization;
 import utils.ClockPriorities;
 
 import java.awt.*;
+import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 
@@ -16,13 +17,13 @@ public class Main {
      * defines an array of zone ids and sets the main thread priority to
      * max to make sure it will remain active and the starts the clocks
      */
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args)  {
         String[] zoneIds = {"Asia/Tehran", "Europe/London", "Australia/Sydney", "America/Chicago"};
         Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
         runClocks(zoneIds);
     }
 
-    private static void runClocks(String[] zoneIds) throws InterruptedException {
+    private static void runClocks(String[] zoneIds) {
         now = Instant.now();
         ClockThread[] threads = initializeThreads(zoneIds);
         DigitalWatch[] graphicThreads = initializeGraphicThreads(threads);
@@ -40,21 +41,10 @@ public class Main {
             }
             if (DEBUG) {
                 for (int i = 0; i < 4; i++) {
-//                    System.out.println(i + " " + threads[i].suspendflag);
                     if (priorityOrder.get(i) <= runningThreadsCount) {
-//                        if (threads[i].suspendflag) {
-//                            graphicThreads[i].resume();
-//                        }
                         graphicThreads[i].resume();
-//                        threads[i].Resume();
-
-
                     } else {
-//                        if (!threads[i].suspendflag) {
-//                            graphicThreads[i].suspend();
-//                        }
                         graphicThreads[i].suspend();
-//                        threads[i].Suspend();
 
                     }
                 }
@@ -86,7 +76,6 @@ public class Main {
     private static DigitalWatch[] initializeGraphicThreads(ClockThread[] threads) {
         DigitalWatch[] graphicThreads = new DigitalWatch[threads.length];
         for (int i = 0; i < threads.length; i++) {
-//            graphicThreads[i] = new Thread(new DigitalWatch(threads[i]));
             graphicThreads[i] = new DigitalWatch(threads[i]);
         }
         return graphicThreads;

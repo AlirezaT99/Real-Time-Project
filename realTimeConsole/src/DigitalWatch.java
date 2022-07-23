@@ -1,5 +1,24 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+
+class ImagePanel extends JComponent {
+    private Image image;
+
+    public ImagePanel(Image image) {
+        this.image = image;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(image, 0, 0, this);
+    }
+}
 
 public class DigitalWatch extends Thread {
     JFrame frame;
@@ -11,29 +30,29 @@ public class DigitalWatch extends Thread {
         this.timerThread = thread;
         frame = new JFrame();
 
-        timezone = new JLabel();
-        timezone.setText(thread.zoneId);
-        timeBtn = new JButton();
-        timeBtn.setBounds(100, 100, 100, 50);
-        timezone.setBounds(100, 20, 200, 50);
+        timezone = new JLabel(thread.zoneId);
 
+        timezone.setForeground(Color.WHITE);
+        timezone.setFont(new Font("TimesRoman", Font.BOLD, 15));
+        timeBtn = new JButton();
+        timeBtn.setForeground(Color.GREEN);
+        timeBtn.setFont(new Font("TimesRoman", Font.BOLD, 16));
+        timeBtn.setBackground(Color.DARK_GRAY);
+
+        if (timerThread.zoneId.equals("Asia/Tehran")) {
+            timezone.setBounds(80, 20, 200, 50);
+        } else {
+            timezone.setBounds(60, 20, 200, 50);
+        }
+        timeBtn.setBounds(60, 80, 130, 50);
+
+
+        frame.getContentPane().setBackground(Color.BLACK);
         frame.add(timezone);
         frame.add(timeBtn);
-        frame.setSize(300, 400);
+        frame.setSize(250, 200);
         frame.setLayout(null);
         frame.setVisible(true);
-    }
-
-    public void Suspend() {
-        frame.setVisible(false);
-        super.suspend();
-//        frame.dispose();
-    }
-
-    public void Resume() {
-        frame.setVisible(true);
-//        frame.dispose();
-        super.resume();
     }
 
 
@@ -53,43 +72,3 @@ public class DigitalWatch extends Thread {
     }
 
 }
-
-//public class DigitalWatch implements Runnable {
-//    JFrame frame;
-//    JButton timeBtn;
-//    JLabel timezone;
-//    ClockThread timerThread;
-//
-//    DigitalWatch(ClockThread thread) {
-//        this.timerThread = thread;
-//        frame = new JFrame();
-//
-//        timezone = new JLabel();
-//        timezone.setText(thread.zoneId);
-//        timeBtn = new JButton();
-//        timeBtn.setBounds(100, 100, 100, 50);
-//        timezone.setBounds(100, 20, 200, 50);
-//
-//        frame.add(timezone);
-//        frame.add(timeBtn);
-//        frame.setSize(300, 400);
-//        frame.setLayout(null);
-//        frame.setVisible(true);
-//    }
-//
-//    public void run() {
-//        try {
-//            while (true) {
-//                printTime();
-//                TimeUnit.SECONDS.sleep(1);
-//            }
-//        } catch (Exception e) {
-//        }
-//    }
-//
-//    public void printTime() {
-//        timeBtn.setText(timerThread.time);
-//    }
-//
-//
-//}
