@@ -20,6 +20,7 @@ public class CPUUtilization {
     public static ExecutionLevels getExecutionPlan(int second, boolean test) {
 //        double cpuUtil = getUtilization(second, test);
         double cpuUtil = getCpu();
+        System.out.println("------- cpu utilization: " + cpuUtil);
         if (cpuUtil >= UtilLevel2) {
             return ExecutionLevels.HighestPriorityOnly;
         } else if (cpuUtil >= UtilLevel1) {
