@@ -1,6 +1,7 @@
 import utils.CPUUtilization;
 import utils.ClockPriorities;
 
+import java.awt.*;
 import java.time.Instant;
 import java.util.List;
 
@@ -15,16 +16,16 @@ public class Main {
      * defines an array of zone ids and sets the main thread priority to
      * max to make sure it will remain active and the starts the clocks
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         String[] zoneIds = {"Asia/Tehran", "Europe/London", "Australia/Sydney", "America/Chicago"};
         Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
         runClocks(zoneIds);
     }
 
-    private static void runClocks(String[] zoneIds) {
+    private static void runClocks(String[] zoneIds) throws InterruptedException {
         now = Instant.now();
         ClockThread[] threads = initializeThreads(zoneIds);
-        Thread[] graphicThreads = initializeGraphicThreads(threads);
+        DigitalWatch[] graphicThreads = initializeGraphicThreads(threads);
         int second, runningThreadsCount;
         final int[] priorities = new int[]{8, 6, 4, 2};
         List<Integer> priorityOrder;
@@ -39,12 +40,22 @@ public class Main {
             }
             if (DEBUG) {
                 for (int i = 0; i < 4; i++) {
+//                    System.out.println(i + " " + threads[i].suspendflag);
                     if (priorityOrder.get(i) <= runningThreadsCount) {
-                        threads[i].resume();
-//                        graphicThreads[i].resume();
+//                        if (threads[i].suspendflag) {
+//                            graphicThreads[i].resume();
+//                        }
+                        graphicThreads[i].resume();
+//                        threads[i].Resume();
+
+
                     } else {
-                        threads[i].suspend();
-//                        graphicThreads[i].suspend();
+//                        if (!threads[i].suspendflag) {
+//                            graphicThreads[i].suspend();
+//                        }
+                        graphicThreads[i].suspend();
+//                        threads[i].Suspend();
+
                     }
                 }
             }
@@ -72,10 +83,11 @@ public class Main {
         return threads;
     }
 
-    private static Thread[] initializeGraphicThreads(ClockThread[] threads) {
-        Thread[] graphicThreads = new Thread[threads.length];
+    private static DigitalWatch[] initializeGraphicThreads(ClockThread[] threads) {
+        DigitalWatch[] graphicThreads = new DigitalWatch[threads.length];
         for (int i = 0; i < threads.length; i++) {
-            graphicThreads[i] = new Thread(new DigitalWatch(threads[i]));
+//            graphicThreads[i] = new Thread(new DigitalWatch(threads[i]));
+            graphicThreads[i] = new DigitalWatch(threads[i]);
         }
         return graphicThreads;
     }

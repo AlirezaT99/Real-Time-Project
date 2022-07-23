@@ -1,55 +1,95 @@
 import javax.swing.*;
-import java.awt.*;
-import java.text.*;
-import java.util.*;
+import java.util.concurrent.TimeUnit;
 
-public class DigitalWatch implements Runnable {
-    JFrame f;
-    Thread t = null;
-    int hours = 0, minutes = 0, seconds = 0;
-    String timeString = "";
-    JButton b;
-    JLabel l;
-    ClockThread relatedThread;
+public class DigitalWatch extends Thread {
+    JFrame frame;
+    JButton timeBtn;
+    JLabel timezone;
+    ClockThread timerThread;
 
-    DigitalWatch(ClockThread thread) {
-        this.relatedThread = thread;
-        f = new JFrame();
+    public DigitalWatch(ClockThread thread) {
+        this.timerThread = thread;
+        frame = new JFrame();
 
-        // Todo : check this!!!!
-        t = new Thread(this);
-        t.start();
+        timezone = new JLabel();
+        timezone.setText(thread.zoneId);
+        timeBtn = new JButton();
+        timeBtn.setBounds(100, 100, 100, 50);
+        timezone.setBounds(100, 20, 200, 50);
 
-        l = new JLabel();
-        l.setText(thread.zoneId);
-        b = new JButton();
-        b.setBounds(100, 100, 100, 50);
-        l.setBounds(100, 20, 200, 50);
-
-        f.add(l);
-        f.add(b);
-        f.setSize(300, 400);
-        f.setLayout(null);
-        f.setVisible(true);
+        frame.add(timezone);
+        frame.add(timeBtn);
+        frame.setSize(300, 400);
+        frame.setLayout(null);
+        frame.setVisible(true);
     }
 
+    public void Suspend() {
+        frame.setVisible(false);
+        super.suspend();
+//        frame.dispose();
+    }
+
+    public void Resume() {
+        frame.setVisible(true);
+//        frame.dispose();
+        super.resume();
+    }
+
+
+    @Override
     public void run() {
         try {
             while (true) {
                 printTime();
-                t.sleep(1000);  // interval given in milliseconds
+                TimeUnit.SECONDS.sleep(1);
             }
         } catch (Exception e) {
         }
     }
 
     public void printTime() {
-        b.setText(relatedThread.time);
+        timeBtn.setText(timerThread.time);
     }
 
-//    public static void main(String[] args) {
-//        new DigitalWatch();
-//
-//
-//    }
 }
+
+//public class DigitalWatch implements Runnable {
+//    JFrame frame;
+//    JButton timeBtn;
+//    JLabel timezone;
+//    ClockThread timerThread;
+//
+//    DigitalWatch(ClockThread thread) {
+//        this.timerThread = thread;
+//        frame = new JFrame();
+//
+//        timezone = new JLabel();
+//        timezone.setText(thread.zoneId);
+//        timeBtn = new JButton();
+//        timeBtn.setBounds(100, 100, 100, 50);
+//        timezone.setBounds(100, 20, 200, 50);
+//
+//        frame.add(timezone);
+//        frame.add(timeBtn);
+//        frame.setSize(300, 400);
+//        frame.setLayout(null);
+//        frame.setVisible(true);
+//    }
+//
+//    public void run() {
+//        try {
+//            while (true) {
+//                printTime();
+//                TimeUnit.SECONDS.sleep(1);
+//            }
+//        } catch (Exception e) {
+//        }
+//    }
+//
+//    public void printTime() {
+//        timeBtn.setText(timerThread.time);
+//    }
+//
+//
+//}

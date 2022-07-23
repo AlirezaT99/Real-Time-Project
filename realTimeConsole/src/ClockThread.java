@@ -5,6 +5,7 @@ import java.time.format.FormatStyle;
 
 public class ClockThread extends Thread {
 
+    public boolean suspendflag = false;
     public final String zoneId;
     public String time = "";
 
@@ -26,5 +27,15 @@ public class ClockThread extends Thread {
                 Thread.currentThread().interrupt();
             }
         }
+    }
+
+    public void Suspend() {
+        suspendflag = true;
+        super.suspend();
+    }
+
+    public void Resume() {
+        suspendflag = false;
+        super.resume();
     }
 }
